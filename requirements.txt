@@ -1,0 +1,10 @@
+pandas
+numpy
+requests
+python-dotenv
+pyjanitor
+matplotlib
+seaborn
+plotly
+jupyter
+us
