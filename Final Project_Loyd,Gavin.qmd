@@ -11,30 +11,16 @@ format:
 ---
 ## Executive Summary
 
-The substantial back-and-forth of U.S. energy priorities over the past three administrations makes it imperative to understand how policy shifts and technological developments shape the national energy mix.  
-This analysis draws on both historical and forward-looking data to map out the consequences of these shifts and better inform policymakers about their implications for the broader energy ecosystem.  
-
-To accomplish this, the study integrates **Energy Information Administration (EIA)** data and **Midcontinent Independent System Operator (MISO)** queue data to capture how the U.S. generating fleet has evolved, how we arrived at this point, and what future trajectories may look like.
-
-This research methodology employed **time-series analysis**, **geographic analysis** (at the county and state level), and **descriptive statistics** to detect structural shifts in the energy system.  
-The major analytical drivers include **nameplate megawatt capacity** and **technology type**, which together reveal the scale and composition of the generation fleet.
+U.S. generation capacity moves with policy and technology cycles. This study combines **EIA** operating-generator data and the **MISO** interconnection queue to show how capacity has shifted and where it is headed. Methods: **time-series analysis**, **state/county geography**, and **descriptive statistics** centered on **nameplate capacity**, **technology**, and a **clean/non-clean** flag.
 
 ---
 
-### Key Findings
+## Key Findings
 
-**1. No Single Technology Is Untouchable And Megawatts Change**  
-
-
-**2. Clean Energy Is Not Distributed Uniformly**  
-
-**3. Renewables Are More Geographically Dispersed Than Legacy Generation**  
-Within any given state, renewable technologies tend to span more counties and communities.  
-This wider footprint suggests that more Americans can experience local economic benefits—an argument that may strengthen public and political support for renewables.
-
-**4. Policy Matters - Advocate for Non-Obstructive Policy**  
-
-Suggestion: Use the momentum of solar and wind the past few years to tell people the successes of renewables and ensure everyone know the role they can play in the future of electricity.
+1. **No single technology is untouchable.** Additions swing with policy and innovation.
+2. **Clean buildout is uneven.** The West leads; several Eastern states lag.
+3. **Renewables are more dispersed.** They span more counties than legacy thermal.
+4. **Policy is decisive.** Incentives and permitting shape outcomes; markets alone do not.
 
 ## Introduction & Methodology
 
@@ -490,7 +476,7 @@ miso_df["ira_withdraw"] = pd.cut(
 #### MISO Technology Expansion Documentation
 For the sake of replicability, this data wrangling step requires clear documentation due to its complexity. The logic is documented below.
 
-**Problem 1:** Need to use the same technology groups as the EIA data — **Solar, Wind, Natural Gas, Nuclear, Coal, and Other.**  
+**Problem 1:** Need to use the same technology groups as the EIA data: **Solar, Wind, Natural Gas, Nuclear, Coal, and Other.**  
 To solve this, Problem 2 must first be addressed.
 
 **Problem 2:** The `technology` field includes **Hybrid**, which can represent several technologies (for example, a combined solar and battery plant).  
@@ -1099,7 +1085,7 @@ While a simplistic measure, it is valuable to review this data. Here, the study 
 
 #### Future of Energy - MISO Interconnection Queue
 
-**How has the IRA—and its reduction under the “Big Beautiful Bill”—changed the fuel mix of new generation interconnections?**
+**How has the IRA and its reduction under the “Big Beautiful Bill” changed the fuel mix of new generation interconnections?**
 
 1. Are clean energy projects entering the queue less after the “Big Beautiful Bill”?
 2. Are clean energy projects withdrawing at a faster rate after the “Big Beautiful Bill”?
@@ -1169,48 +1155,32 @@ However, the withdrawals_per_month rate and absolute count of withdrawals are ve
 ### Key Findings and Discussion
 
 **1. No Single Technology Is Untouchable**  
-Technological additions fluctuate substantially across sub-periods and appear sensitive to both policy changes and innovation cycles.  
-For example, the shale revolution caused natural gas to overtake coal's market share, and shortly after, wind and solar began cutting into its share following technological improvements and policy interventions.  
-It seems prudent to leverage a dual-pronged technology R&D and policy incentive structure to ensure more clean energy buildout.  
-Thus, targeted policy incentives can meaningfully steer development toward clean energy.
+Technological additions fluctuate substantially across sub-periods and appear sensitive to both policy changes and innovation cycles.  For example, the shale revolution caused natural gas to overtake coal's market share, and shortly after, wind and solar began cutting into its share following technological improvements and policy interventions.  It seems prudent to leverage a dual-pronged technology R&D and policy incentive structure to ensure more clean energy buildout.  Thus, targeted policy incentives can meaningfully steer development toward clean energy.
 
 **2. Clean Energy Is Not Distributed Uniformly**  
-The western United States dominates clean-energy buildout.  
-Future research could better parse out why this is the case, but it is important that every state is willing and able to engage in the green transition.  
-If there are state holdouts and carbon capture does not take hold, Net Zero seems out of reach.  
-Accordingly, policymakers should consider regional equity to ensure the economic benefits of the transition are more evenly shared.  
-This is especially true considering the coal towns of the East are hit the hardest from the transition, which can cause societal incohesion and distrust.  
-A just and equitable energy transition must include these groups.
+The western United States dominates clean-energy buildout.  Future research could better parse out why this is the case, but it is important that every state is willing and able to engage in the green transition.  If there are state holdouts and carbon capture does not take hold, Net Zero seems out of reach.  Accordingly, policymakers should consider regional equity to ensure the economic benefits of the transition are more evenly shared.  This is especially true considering the coal towns of the East are hit the hardest from the transition, which can cause societal incohesion and distrust.  A just and equitable energy transition must include these groups.
 
 **3. Renewables Are More Geographically Dispersed**  
-Within any given state, renewable technologies tend to span more counties and communities.  
-If more counties are going to see energy resources, that means their identity may increasingly be tied to renewables.  
-The more personal attachment there is to an energy resource, the easier it is to create coalitions and advocates for clean energy buildout.  
-This wider footprint suggests that more Americans can experience local economic benefits—an argument that may strengthen public and political support for renewables.  
-This provides ample opportunity and risk. Diligent engagement is necessary.
+Within any given state, renewable technologies tend to span more counties and communities.  If more counties are going to see energy resources, that means their identity may increasingly be tied to renewables.  The more personal attachment there is to an energy resource, the easier it is to create coalitions and advocates for clean energy buildout.  This wider footprint suggests that more Americans can experience local economic benefits—an argument that may strengthen public and political support for renewables.  This provides ample opportunity and risk. Diligent engagement is necessary.
 
 **4. Policy Matters — Advocate for Non-Obstructive Policy**  
 The *Big Beautiful Bill* and the *Inflation Reduction Act (IRA)* correspond to a marked shift in clean-energy project behavior, including increased withdrawals immediately following the IRA's passage.  
-Policy matters — and market forces, despite making solar and wind very cheap, are not enough.  
-A hostile environment can cause a chilling effect that crowds out renewables.  
-As Point 1 indicates, no single technology is dominant.  
-If a clean energy transition is on the horizon, it will require constant policy pressure, and the evidence underscores that markets alone do not dictate capacity expansion — policy design remains a decisive factor.
+Policy matters, and market forces, despite making solar and wind very cheap, are not enough.  A hostile environment can cause a chilling effect that crowds out renewables.  As Point 1 indicates, no single technology is dominant.  If a clean energy transition is on the horizon, it will require constant policy pressure, and the evidence underscores that markets alone do not dictate capacity expansion. Policy design remains a decisive factor.
 
 ---
 
 ### Suggestions
 
-Advocates for clean energy should forward the natural momentum of renewables as a tool for clean energy buildout.  
-Solar and wind in the past decade have shown themselves as real and substantial energy producers.  
-When they get built, they don't stay hidden in a small set of communities across the U.S.  
-Clean energy resources like renewables have a unique opportunity to be front and center in the minds of people living in the U.S. who have more opportunities to see them.  
-This dynamic can be a double-edged sword if implementation is done poorly, so it is crucial for advocates and renewable developers to engage authentically and understand the information ecosystem around energy — which this study contributes to understanding.
+- Protect non-obstructive policy and streamline siting to avoid chilling effects.
+- Use visible, county-level benefits to sustain coalitions for renewable deployment.
+- Track project attrition and queue dynamics closely after major policy changes.
 
-Finally, policymakers interested in leveraging the tidal wave of momentum behind solar and wind to meet any energy needs, even beyond climate considerations, should prevent efforts to push back against solar and wind.
 
 ---
 
 ### Future Work
+
+
 
 There is room for further work on this topic to better understand the future of clean energy.  
 Possible extensions include:
@@ -1218,5 +1188,5 @@ Possible extensions include:
 - Apply **causal inference** to estimate the impact of the *Inflation Reduction Act* and the *Big Beautiful Bill* on megawatt capacity.  
 - Include more **regional transmission operator queues** (e.g., PJM, SPP) to create a more nationally representative sample of future capacity.  
 - **Web scrape** MISO documentation at the project level to impute missing project data.  
-- **Repeat this analysis** one year later — descriptive power would dramatically increase a year out from the *Big Beautiful Bill*, rather than three months.  
+- **Repeat this analysis** one year later. Descriptive power would dramatically increase a year out from the *Big Beautiful Bill*, rather than three months.  
 - Apply **statistical inference tests** (two-proportion *z*-tests and Fisher’s exact tests) to compare withdrawal and new-entry rates across policy periods.
