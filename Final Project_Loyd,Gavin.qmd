@@ -279,7 +279,11 @@ mw_summary = (
     .agg(["sum", "median"])
     .assign(share=lambda x: x["sum"] / x["sum"].sum() * 100)
     .sort_values(by="sum", ascending=False)
-    .style.format(precision=1)
+    .style.format({
+        "sum": "{:.1f}",
+        "median": "{:.1f}",
+        "share": "{:.1f}%"
+    })
     .set_caption("Total MWs per Technology")
 )
 
