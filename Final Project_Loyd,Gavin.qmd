@@ -274,12 +274,15 @@ eia_df = eia_df[eia_df["nameplate_capacity_mw"] >= 10]
 
 # Show technology by MW summary statistics to inform collapsing categories
 
-mw_summary =  (eia_df.groupby("technology")["nameplate_capacity_mw"]
+mw_summary = (
+    eia_df.groupby("technology")["nameplate_capacity_mw"]
     .agg(["sum", "median"])
     .assign(share=lambda x: x["sum"] / x["sum"].sum() * 100)
     .sort_values(by="sum", ascending=False)
-    .style.set_caption("Total MWs per Technology")
+    .style.format(precision=1)
+    .set_caption("Total MWs per Technology")
 )
+
 
 mw_summary
 
