@@ -67,7 +67,7 @@ This study required a relatively extensive set of data processing to ensure usab
 
 While these datasets had many variables of interest, there are three major variables that form the basis of the recommendations and insight generation. 
 
-**Megawatt Capacity (capacity_mw):** For the purposes of this analaysis, megawatt capacity is the maximum output of electricity a generating unit is capable of. It does not always produce at this level, but it is theoretically capable of doing so. Higher numeric values mean higher capability to produce megawatts. The EIA dataset provides a direct variable to represent this information. The MISO dataset required a calculation based on the max of summer_mw and winter_mw to compute nameplate_capacity.  
+**Megawatt Capacity (capacity_mw):** For the purposes of this analysis, megawatt capacity is the maximum output of electricity a generating unit is capable of. It does not always produce at this level, but it is theoretically capable of doing so. Higher numeric values mean higher capability to produce megawatts. The EIA dataset provides a direct variable to represent this information. The MISO dataset required a calculation based on the max of summer_mw and winter_mw to compute nameplate_capacity.  
 
 **Technology (technology):** Technology is a constructed categorical variable made from a far larger list of sub-category technologies across the EIA and MISO dataset. Both datasets treat these things slightly differently, requiring manual review and re-categorization across technology, fuel, and generating_facility variables. The final buckets constructed are: Coal, Natural Gas, Nuclear, Solar, Wind, Batteries, and Other. Other is a broad group inclusive of technologies such as geothermal and hydroelectric. 
 
