@@ -3,43 +3,47 @@ title: "The Shifting Landscape of Clean Energy"
 author: "Gavin Loyd"
 course: "Python Programming II (90-819)"
 institution: "Carnegie Mellon University, Heinz College"
-date: "October 11, 2025"
 format: 
   html:
     toc: true
     toc-expand: 1
 ---
-## Executive Summary
+
+## Project Overview
 
 U.S. generation capacity moves with policy and technology cycles. This study combines **EIA** operating-generator data and the **MISO** interconnection queue to show how capacity has shifted and where it is headed. Methods: **time-series analysis**, **state/county geography**, and **descriptive statistics** centered on **nameplate capacity**, **technology**, and a **clean/non-clean** flag.
 
----
+------------------------------------------------------------------------
 
 ## Key Findings
 
-1. **No single technology is untouchable.** Additions swing with policy and innovation.
-2. **Clean buildout is uneven.** The West leads; several Eastern states lag.
-3. **Renewables are more dispersed.** They span more counties than legacy thermal.
-4. **Policy is decisive.** Incentives and permitting shape outcomes; markets alone do not.
+1.  **No single technology is untouchable.** Additions swing with policy and innovation.
+2.  **Clean buildout is uneven.** The West leads, and several Eastern states lag.
+3.  **Renewables are more dispersed.** They span more counties than legacy thermal.
+4.  **Policy is decisive.** Incentives and permitting shape outcomes even under market forces.
 
 ## Introduction & Methodology
 
-The green transition is a defining phenomenon of the 21st-century United States. Scientists, politicians, and activists have consistently vocalized an urgent need to reduce emissions to meet various climate targets before we pass various thresholds of no return. For decades, the policy apparatus and the private sector have put forward a plethora of mechanisms to meet climate goals such as carbon trading schemes, renewable portfolio standards, clean technology subsidies, and permitting reform. 
+The clean energy transition is a defining feature of the 21st-century United States. Scientists, politicians, and activists have consistently vocalized an urgent need to reduce emissions to meet various climate targets before we pass various thresholds of no return. For decades, the policy apparatus and the private sector have put forward a plethora of mechanisms to meet climate goals such as carbon trading schemes, renewable portfolio standards, clean technology subsidies, and permitting reform.
 
-At its most basic level. the green transition is decided by the make-up of the electricity market. If the generators do not get cleaner, then all actors interested in meeting their climate targets have no avenue to do so. Accordingly, it is critical to understand the limitations and successes of the green transition in terms of the physical infrastructure built and installed to produce electricity. This study interrogates the green trends we are seeing in the electricity sector.
+If power plants do not get cleaner, then all actors interested in meeting their climate targets have far fewer options to reduce carbon emissions. Accordingly, it is critical to understand the limitations and successes of the green transition in terms of the physical infrastructure built and installed to produce electricity. This study interrogates the green trends we are seeing in the electricity sector.
 
 ### Research Question and Objectives
 
-
 **Primary research question:** What trends can we identify in the available capacity for power plants, especially in terms of clean energy?
 
-**Objectives:**
-This analysis attempts to answer the above research question by quantifying and breaking it down into the following smaller questions:
+**Objectives:** This analysis attempts to answer the above research question by quantifying and breaking it down into the following smaller questions:
+
 <ol type="a">
-  <li>What has the US fuel mix historically looked like?</li>
-  <li>Do we see noticeable changes in available capacity following technological booms and policy shocks?</li>
-  <li>How are different types of power plants geographically distributed and what are the implications for capital flow to communities?</li>
-  <li>Does the evidence suggest the US fuel mix is becoming cleaner over time?</li>
+
+<li>What has the US fuel mix historically looked like?</li>
+
+<li>Do we see noticeable changes in available capacity following technological booms and policy shocks?</li>
+
+<li>How are different types of power plants geographically distributed and what are the implications for capital flow to communities?</li>
+
+<li>Does the evidence suggest the US fuel mix is becoming cleaner over time?</li>
+
 </ol>
 
 The general hypothesis is that there has been extensive "greening" of the electricity market with very clear spikes in recent years. However, a more hostile policy environment following the elimination of much of the Inflation Reduction Act, a punitive permitting regime, and incentives for competitor energy sources in the past 6 months should show itself in the data. Renewables are more geographically distributed than more traditional energy sources like coal, natural gas, and nuclear due to their unique access to their respective fuels and the energy density of traditional energy sources.
@@ -48,38 +52,47 @@ The general hypothesis is that there has been extensive "greening" of the electr
 
 This study uses two datasets to conduct its analysis:
 
-**The Energy Information Administration Inventory of Operable Generators** - The raw data is sourced from the EIA API and covers 27,219 generators and 26 columns from the July Operating Generator Monthly Survey. The clean dataframe is 10,772 generators and 12 columns. This clean dataset is a subset of generators 10 MW or above to make this a utility-scale dataset and apples-to-apples with the MISO data. It covers operating years from 1905 to 2025. Every power plant in the United States is required to respond to these surveys, which gives the US federal government a high-confidence estimate about the available capacity in the United States.
+**The Energy Information Administration Inventory of Operable Generators** - The raw data is sourced from the EIA API and covers 27,219 generators and 26 columns from the July Operating Generator Monthly Survey. The clean dataframe is 10,772 generators and 12 columns. This clean dataset is a subset of *power plants* 10 MW or above to make this a utility-scale dataset and apples-to-apples with the MISO data. A power plant can have multiple *generators* and each generator is its own row. It covers operating years from 1905 to 2025. Every power plant in the United States is required to respond to these surveys, which gives the US federal government a high-confidence estimate about the available capacity in the United States.
 
-**The Midcontinent Independent System Operator Generator Interactive Queue** - The raw data from the MISO queue is 3549 interconnection applications for power plants with 24 columns (distinct from generators). It is sourced directly from the MISO website at https://www.misoenergy.org/planning/resource-utilization/GI_Queue/gi-interactive-queue/. The clean dataset includes applications entered in 2015 to 2025 with 3736 rows and 10 columns. The increase in rows is due to expanding power plants into distinct generators for Hybrid Projects. The Midcontinent Independent System Operator is one of many "regional transmission owners" that decides whether a project is allowed to use the transmission lines. This data is de facto the list of all future possible power plants within its physical territory in the United States, making it perfect for future-looking analysis. It is important to note that while MISO projects may be in a certain state, that does not mean MISO is every project in that state. For example, MISO has a small regional footprint in Texas but is just a fraction of the total generation in Texas which is primarily served by ERCOT.
+**The Midcontinent Independent System Operator Generator Interactive Queue** - The MISO Generator Interconnection Queue contains 3,549 interconnection applications for power plants, sourced directly from the MISO website, with 24 original data fields per application. After cleaning the data and restricting it to applications submitted between 2015 and 2025, the final dataset includes 3,736 rows and 10 fields. The increase in row count reflects the expansion of certain applications, particularly hybrid projects, into distinct generating units rather than an increase in the number of underlying interconnection requests.
 
-#### Data Processing
+The Midcontinent Independent System Operator is a regional grid operator that administers the interconnection process within its transmission footprint but does not own the transmission assets. Projects in the queue represent proposed generation seeking permission to connect to the grid. Some of these projects will advance through the interconnection process and be constructed, while others will be delayed, modified, or withdrawn.
+
+As a result, the queue should be interpreted as a forward-looking inventory of potential generation within MISO’s footprint rather than a forecast of realized capacity. It is well suited for analyzing development interest, technology mix, and spatial patterns, but it overstates actual future buildout without additional screening.
+
+Finally, project location by state does not imply full coverage of that state’s generation development. MISO’s footprint does not match 1:1 with state boundaries. For example, MISO covers only a small portion of Texas, where most generation interconnection is handled by ERCOT.
+
+### Data Processing
 
 This study required a relatively extensive set of data processing to ensure usability and a 1:1 standard between the two datasets. At a high level, they can be described as:
 
 <ol>
-  <li>*Collapsing Technologies:* All variations of generating facility and/or technology were standardized to the same basic category groups</li>
-  <li>*Missing Values:* No missing values for relevant columns existed in the EIA data. Missing values were largely eliminated as a by-product of the filtering process in MISO. However, in the cases where they remained (missing technology), manual look-up concluded they could not be inputed at scale and were removed.</li>
-  <li>*API Handling*:</li> The EIA API required proper handling for a 5,000 row call limit. Relevant error checks and pagination was implemented and then cross-referenced with the online data-puller row and column count to ensure accuracy.
-  <li>*Date Coercion:* Date columns needed to be standardized to date format for use in time analysis</li>
+
+<li>*Collapsing Technologies:* All variations of generating facility and/or technology were standardized to the same basic category groups</li>
+
+<li>*Missing Values:* No missing values for relevant columns existed in the EIA data. Missing values were largely eliminated as a by-product of the filtering process in MISO. However, in the cases where they remained (missing technology), manual look-up concluded they could not be inputed at scale and were removed.</li>
+
+<li>*API Handling*:</li>
+
+The EIA API required proper handling for a 5,000 row call limit. Relevant error checks and pagination was implemented and then cross-referenced with the online data-puller row and column count to ensure accuracy.
+
+<li>*Date Coercion:* Date columns needed to be standardized to date format for use in time analysis</li>
+
 </ol>
 
-### Most Common Key Variables
+### Key Variables
 
-While these datasets had many variables of interest, there are three major variables that form the basis of the recommendations and insight generation. 
+While these datasets had many variables of interest, there are three major variables that form the basis of the recommendations and insight generation.
 
-**Megawatt Capacity (capacity_mw):** For the purposes of this analysis, megawatt capacity is the maximum output of electricity a generating unit is capable of. It does not always produce at this level, but it is theoretically capable of doing so. Higher numeric values mean higher capability to produce megawatts. The EIA dataset provides a direct variable to represent this information. The MISO dataset required a calculation based on the max of summer_mw and winter_mw to compute nameplate_capacity.  
+**Megawatt Capacity (capacity_mw):** For the purposes of this analaysis, megawatt capacity is the maximum output of electricity a generating unit is capable of. It does not always produce at this level, but it is theoretically capable of doing so. Higher numeric values mean higher capability to produce megawatts. The EIA dataset provides a direct variable to represent this information. The MISO dataset required a calculation based on the max of summer_mw and winter_mw to compute nameplate_capacity.
 
-**Technology (technology):** Technology is a constructed categorical variable made from a far larger list of sub-category technologies across the EIA and MISO dataset. Both datasets treat these things slightly differently, requiring manual review and re-categorization across technology, fuel, and generating_facility variables. The final buckets constructed are: Coal, Natural Gas, Nuclear, Solar, Wind, Batteries, and Other. Other is a broad group inclusive of technologies such as geothermal and hydroelectric. 
+**Technology (technology):** Technology is a constructed categorical variable made from a far larger list of sub-category technologies across the EIA and MISO dataset. Both datasets treat these things slightly differently, requiring manual review and re-categorization across technology, fuel, and generating_facility variables. The final buckets constructed are: Coal, Natural Gas, Nuclear, Solar, Wind, Batteries, and Other. Other is a broad group inclusive of technologies such as geothermal and hydroelectric.
 
 **Clean (clean):** Clean is a binary categorical variable that can take on Clean or Non-Clean relative to the value of technology for a given power plant. “Clean” if technology is in Solar, Wind, Batteries, Nuclear, Conventional Hydroelectric, Geothermal, Hydroelectric Pumped Storage; else “Non-Clean”.
 
-
-
-
-
 ### Analytical Framework and Statistical Methods
 
-This study relies primarily on descriptive statistical techniques to better understand the green transition - how well it's doing and where there are slowdowns. This study does not attempt to attach causal explanations to any technological or policy development, but does attempt to map these possible explanatory variables to support future more causal research. With that said, this study leverages a few techniques.
+This study relies primarily on descriptive statistical techniques to better understand the green transition; how well it's doing and where there are slowdowns. This study does not attempt to attach causal explanations to any technological or policy development, but does attempt to map these possible explanatory variables to support future more causal research. With that said, this study leverages a few techniques.
 
 **Time Series Visualization:** Plotting of megawatt additions by technology groups to identify possible associations with policy and technological developments.
 
@@ -89,6 +102,7 @@ This study relies primarily on descriptive statistical techniques to better unde
 
 **Policy Time Bucketing:** Time buckets surrounding the timeline of the Inflation Reduction Act and comparison rates to see impact on future energy trends.
 
+## Data Wrangling & Cleaning
 
 ```{python}
 # Standard library imports
@@ -111,7 +125,7 @@ from IPython.display import display, Markdown
 
 ```
 
-
+### EIA Data
 
 ```{python}
 ## API Set-Up
@@ -181,7 +195,6 @@ while got < total:
 
 ```
 
-
 ```{python}
 
 ## Review Basic Dataframe Structure and Data Exploration
@@ -213,7 +226,7 @@ display(eia_df.isna().sum().sort_values(ascending=False))
 eia_df["nameplate_capacity_mw"] = pd.to_numeric(eia_df["nameplate_capacity_mw"], errors="coerce")
 
 
-# Clean and standardize text because simple todatetime isnt working for dates. Broad regex because not clear on issue
+# Clean and standardize text because simple todatetime isnt working for dates
 eia_df["operating_year_month"] = (
     eia_df["operating_year_month"]
     .astype(str)
@@ -259,8 +272,6 @@ eia_df = eia_df.drop(columns=[
 
 ```
 
-
-
 ```{python}
 
 
@@ -269,21 +280,22 @@ eia_df["technology"].value_counts()
 
 ## Prioritizing utility-scale resources, but what is utility-scale and what is not? Common industry rule is 10 MW or greater OR connected to transmission system. Data is limited to nameplate capacity, so using that as decision rule
 
-# Filter to utility-scale resources (>=10 MW)
-eia_df = eia_df[eia_df["nameplate_capacity_mw"] >= 10]
+
+# Filter to utility-scale resources (>=10 MW at the plant level)
+utility_scale_plants = eia_df.groupby("plantid")["nameplate_capacity_mw"].sum()
+eia_df = eia_df[eia_df["plantid"].isin(utility_scale_plants[utility_scale_plants >= 10].index)]
+
 
 # Show technology by MW summary statistics to inform collapsing categories
+
 
 mw_summary = (
     eia_df.groupby("technology")["nameplate_capacity_mw"]
     .agg(["sum", "median"])
     .assign(share=lambda x: x["sum"] / x["sum"].sum() * 100)
     .sort_values(by="sum", ascending=False)
-    .style.format({
-        "sum": "{:.1f}",
-        "median": "{:.1f}",
-        "share": "{:.1f}%"
-    })
+    .style
+    .format({"sum": "{:,.2f}", "median": "{:,.2f}", "share": "{:.2f}%"})
     .set_caption("Total MWs per Technology")
 )
 
@@ -292,43 +304,89 @@ mw_summary
 
 ```
 
-
 ```{python}
+
 ### Create utility-scale filtered dataframe and collapse technologies
 # There are too many technologies even after filtering. 
 # Many are also out of scope for this project at that level of granularity. Coal, wind, solar, natural gas, nuclear, and batteries are main technologies of interest. Will collapse others into "Other" category
 
+def categorize_technology(df, tech_col="technology", new_col="technology_group"):
+    """
+    Categorize technologies into standardized groups.
+    
+    Parameters:
+    - df: DataFrame with a technology column
+    - tech_col: name of the column containing technology values
+    - new_col: name for the new grouped technology column
+    
+    Returns:
+    - DataFrame with new technology_group column
+    """
+    # Define technology mapping (keyword -> group)
+    tech_mapping = {
+        "Natural Gas": "Natural Gas",
+        "Coal": "Coal",
+        "Wind": "Wind",
+        "Solar": "Solar",
+        "Nuclear": "Nuclear",
+        "Batteries": "Battery Storage"
+    }
+    
+    # Start with "Other" as default
+    df[new_col] = "Other"
+    
+    # Apply mappings
+    for keyword, group in tech_mapping.items():
+        mask = df[tech_col].str.contains(keyword, case=False, na=False)
+        df.loc[mask, new_col] = group
+    
+    return df
 
-eia_df = eia_df.assign(
-    technology_group = "Other"
-)
+def classify_clean(df, tech_group_col="technology_group", tech_detail_col="technology"):
+    """
+    Create binary clean/non-clean classification.
+    
+    Parameters:
+    - df: DataFrame with technology columns
+    - tech_group_col: grouped technology column
+    - tech_detail_col: detailed technology column
+    
+    Returns:
+    - DataFrame with 'clean' column
+    """
+    # All clean technologies (both grouped and detailed)
+    clean_technologies = [
+        # Grouped categories
+        "Solar", "Wind", "Battery Storage", "Nuclear",
+        # Detailed categories (non-changed cases)
+        "Conventional Hydroelectric", "Geothermal", "Hydroelectric Pumped Storage"
+    ]
+    
+    # Single check across both columns
+    df["clean"] = np.where(
+        df[tech_group_col].isin(clean_technologies) | df[tech_detail_col].isin(clean_technologies),
+        "Clean",
+        "Non-Clean"
+    )
+    
+    return df
 
-eia_df.loc[eia_df["technology"].str.contains("Natural Gas", case=False, na=False), "technology_group"] = "Natural Gas"
-eia_df.loc[eia_df["technology"].str.contains("Coal", case=False, na=False), "technology_group"] = "Coal"
-eia_df.loc[eia_df["technology"].str.contains("Wind", case=False, na=False), "technology_group"] = "Wind"
-eia_df.loc[eia_df["technology"].str.contains("Solar", case=False, na=False), "technology_group"] = "Solar"
-eia_df.loc[eia_df["technology"].str.contains("Nuclear", case=False, na=False), "technology_group"] = "Nuclear"
-eia_df.loc[eia_df["technology"].str.contains("Batteries", case=False, na=False), "technology_group"] = "Batteries"
+# Apply the functions
+eia_df = categorize_technology(eia_df, tech_col="technology", new_col="technology_group")
+eia_df = classify_clean(eia_df, tech_group_col="technology_group", tech_detail_col="technology")
 
 
-# Create clean/non-clean categories
+# Verify logic of what came out as clean by checking columns
 
-eia_df = eia_df.assign(
-    clean = np.where(eia_df["technology_group"].isin(["Solar", "Wind", "Batteries", "Nuclear"]), "Clean", "Non-Clean")
-)
+display(eia_df.query("clean == 'Clean'").value_counts("technology"))
+display(eia_df.query("clean == 'Clean'").value_counts("technology_group"))
 
-# From technology, find Hydroelectric and geothermal and classify as clean
-eia_df["clean"] = np.where(
-    eia_df["technology"].isin(["Conventional Hydroelectric", "Geothermal", "Hydroelectric Pumped Storage"]),
-    "Clean",
-    eia_df["clean"]
-)
+# From "Others" in technology_group, check technology
+display(eia_df.query("technology_group == 'Other' & clean == 'Clean'").value_counts("technology"))
 
-# Confirm expected result
-eia_df.query("technology in ['Conventional Hydroelectric', 'Geothermal', 'Hydroelectric Pumped Storage']").sample(20)
-
-# Change and remove old tech column
+# Replace original technology column with grouped version
 eia_df = eia_df.drop(columns="technology").rename(columns={"technology_group": "technology"})
+
 
 ```
 
@@ -338,7 +396,7 @@ eia_df = eia_df.drop(columns="technology").rename(columns={"technology_group": "
 eia_df.to_csv("EIA_Generator_Clean.csv", index=False)
 ```
 
-
+### MISO Data
 
 ```{python}
 # Import MISO Queue Data
@@ -403,8 +461,6 @@ miso_df.isna().sum().sort_values(ascending=False)
 
 ```
 
-
-
 ```{python}
 ### Clean Up The Incorrect Date Columns
 
@@ -435,7 +491,6 @@ miso_df.dtypes
 
 ```
 
-
 ```{python}
 ### Create nameplate capacity_mw column
 
@@ -445,8 +500,6 @@ miso_df = miso_df.assign(capacity_mw = miso_df[["summer_mw", "winter_mw"]].max(a
 # Remove them now that we don't need them
 miso_df.drop(columns=["summer_mw", "winter_mw"], inplace=True)
 ```
-
-
 
 ```{python}
 ### Create Time-Period Columns For Pre-IRA, During IRA, Post-IRA
@@ -481,37 +534,36 @@ miso_df["ira_withdraw"] = pd.cut(
 ```
 
 #### MISO Technology Expansion Documentation
+
 For the sake of replicability, this data wrangling step requires clear documentation due to its complexity. The logic is documented below.
 
-**Problem 1:** Need to use the same technology groups as the EIA data: **Solar, Wind, Natural Gas, Nuclear, Coal, and Other.**  
+**Problem 1:** Need to use the same technology groups as the EIA data: **Solar, Wind, Natural Gas, Nuclear, Coal, and Other.**\
 To solve this, Problem 2 must first be addressed.
 
-**Problem 2:** The `technology` field includes **Hybrid**, which can represent several technologies (for example, a combined solar and battery plant).  
+**Problem 2:** The `technology` field includes **Hybrid**, which can represent several technologies (for example, a combined solar and battery plant).\
 The goal is to have **zero hybrids** remaining in the `technology` column of the MISO dataframe.
 
-**Logic:**
-1. Determine whether the `generating_facility` value indicates:
-   - A **new hybrid addition**, or  
-   - A **single-technology addition** that makes an existing plant hybrid.  
-   - If the latter, reassign `generating_facility` to `technology`.
+**Logic:** 1. Determine whether the `generating_facility` value indicates: - A **new hybrid addition**, or\
+- A **single-technology addition** that makes an existing plant hybrid.\
+- If the latter, reassign `generating_facility` to `technology`.
 
-2. Create a DataFrame of *true hybrids*, identified and reassigned according to the following rules:
-   - **Combustion Turbine (Simple Cycle):** Reassign to *Other*  
-   - **Steam Turbine (including Nuclear, Geothermal, and Solar Steam):** Reassign to *Other*  
-   - **Piston (Engine), Internal Combustion:** Reassign to *Other*  
-   - **Wind Turbine:** Reassign to *Wind*  
-   - **Photovoltaic:** Reassign to *Solar*  
-   - **Battery Storage:** Reassign to *Battery Storage*
+2.  Create a DataFrame of *true hybrids*, identified and reassigned according to the following rules:
+    -   **Combustion Turbine (Simple Cycle):** Reassign to *Other*\
+    -   **Steam Turbine (including Nuclear, Geothermal, and Solar Steam):** Reassign to *Other*\
+    -   **Piston (Engine), Internal Combustion:** Reassign to *Other*\
+    -   **Wind Turbine:** Reassign to *Wind*\
+    -   **Photovoltaic:** Reassign to *Solar*\
+    -   **Battery Storage:** Reassign to *Battery Storage*
+3.  For **new hybrid additions**, perform the following steps:
+    -   Parse the `generating_facility` field to identify *n* component technologies:
+        -   *Solar/Battery* → 2 rows\
+        -   *Wind/Battery* → 2 rows\
+        -   *Solar/Wind/Battery* → 3 rows\
+        -   *Solar/Wind* → 2 rows
+    -   Expand each record into *n* rows.
+    -   To prevent double-counting, divide project MW equally among components\
+        *(i.e., capacity = total MW / n)*.
 
-3. For **new hybrid additions**, perform the following steps:
-   - Parse the `generating_facility` field to identify *n* component technologies:
-     - *Solar/Battery* → 2 rows  
-     - *Wind/Battery* → 2 rows  
-     - *Solar/Wind/Battery* → 3 rows  
-     - *Solar/Wind* → 2 rows
-   - Expand each record into *n* rows.
-   - To prevent double-counting, divide project MW equally among components  
-     *(i.e., capacity = total MW / n)*.
 
 
 ```{python}
@@ -580,54 +632,25 @@ miso_df.value_counts("technology")
 
 ```
 
-
-
 ```{python}
 
 # Standardize the categories to EIA established schema
-miso_df = miso_df.assign(
-    technology_group = "Other"
-)
+# Apply the same functions used for EIA data
 
-miso_df.loc[miso_df["technology"].str.contains("Combined Cycle", case=False, na=False), "technology_group"] = "Natural Gas"
-miso_df.loc[miso_df["technology"].str.contains("Gas", case=False, na=False), "technology_group"] = "Natural Gas"
-miso_df.loc[miso_df["technology"].str.contains("Battery Storage", case=False, na=False), "technology_group"] = "Batteries"
-miso_df.loc[miso_df["technology"].str.contains("Solar", case=False, na=False), "technology_group"] = "Solar"
-miso_df.loc[miso_df["technology"].str.contains("Wind", case=False, na=False), "technology_group"] = "Wind"
-miso_df.loc[miso_df["technology"].str.contains("Coal", case=False, na=False), "technology_group"] = "Coal"
-miso_df.loc[miso_df["technology"].str.contains("Nuclear", case=False, na=False), "technology_group"] = "Nuclear"
+# Step 1: Categorize technology groups
+miso_df = categorize_technology(miso_df, tech_col="technology", new_col="technology_group")
 
+# Step 2: Classify clean vs non-clean
+miso_df = classify_clean(miso_df, tech_group_col="technology_group", tech_detail_col="technology")
 
-
-miso_df["technology_group"].value_counts()
-
-# Create clean/non-clean categories. Unclear what the full range of Steam Turbine (including Nuclear, Geothermal and Solar Steam) is, so given small amount of obs and examples mentioning clean, go clean
-
-miso_df = miso_df.assign(
-    clean = np.where(
-        (
-            miso_df["technology_group"].isin(["Solar", "Wind", "Batteries", "Nuclear"])
-            | miso_df["technology"].isin(["Hydro", "Steam Turbine (including Nuclear, Geothermal and Solar Steam)"])
-        ),
-        "Clean",
-        "Non-Clean"
-    )
-)
-
-
-# Change and remove old tech column
+# Step 3: Replace original technology column with grouped version
 miso_df = miso_df.drop(columns="technology").rename(columns={"technology_group": "technology"})
 
-
 # Sanity Check results
-
 print(miso_df.query("clean == 'Clean'").value_counts("technology"))
 print(miso_df.query("clean == 'Non-Clean'").value_counts("technology"))
 
-
 ```
-
-
 
 ```{python}
 ### Clean State Values
@@ -643,7 +666,6 @@ miso_df["state"] = miso_df["state"].map(state_map)
 
 
 ```
-
 
 ```{python}
 
@@ -668,12 +690,8 @@ miso_df.to_csv("MISO_Queue_Clean.csv", index=False)
 
 ```
 
-
-
-
-
-
 ## Analysis & Results
+
 The analysis of the newly cleaned data primarily attempts to understand what the energy mix looks like today and how we got here. Was there a steady increase in certain forms of technology? Or was there lumpy development that caused skyrocketing share increases? Building upon the status quo of the electricity mix, the MISO data looks towards the future to see what we can expect to see coming online in the next decade. Is this future generation more of the same or different from our legacy generation? To start, this work depicts the national-level data for generators.
 
 ```{python}
@@ -700,31 +718,58 @@ percentage_fuel_mix = (
 
 display(percentage_fuel_mix)
 
-# Boxplot of nameplate capacity by technology
 
-eia_df.boxplot(column="nameplate_capacity_mw", by="technology", vert=False, figsize=(10,6))
-plt.title("Nameplate Capacity by Technology (MW)")
+```
+
+```{python}
+
+# Boxplot of nameplate capacity by technology (accounting for plant grouping)
+# Note: A plant can have different technologies within it
+
+plant_df = eia_df.groupby(["plantid", "technology"])["nameplate_capacity_mw"].sum().reset_index()
+
+# drop plantid 6163 as extreme outlier in Other (Grand Coulee Dam)
+plant_df = plant_df[plant_df["plantid"] != "6163"]
+
+
+ax = plant_df.boxplot(column="nameplate_capacity_mw", by="technology", vert=False, figsize=(10,6))
+plt.title("Nameplate Capacity of Power Plants by Technology (MW)")
 plt.suptitle("")
-plt.ylabel("")      
+plt.ylabel("")
+
+
+
 plt.tight_layout()
 plt.show()
 
 ```
 
 #### National Statistics
-These results are not all that surprising. The US relies heavily on its baseload power, such as natural gas and coal, to meet its electricity needs. These results show that today in the US more than 50% of available generation capacity comes from fossil fuels. Wind and solar only make up around 20% of the total. At least in terms of our fuel mix today, it seems our grid is still incredibly reliant on fossil fuels. It is unlikely our current mix is sufficient to meet US carbon targets. This snapshot of July 2025 is helpful to understand where we are today, but it does not provide much actionable information about how we got here or if there is momentum behind any one technology that we would expect to shake up the percentages in the long-run. This requires moving onto more granular analysis.
 
+These results are not all that surprising. The US relies heavily on its baseload power, such as natural gas and coal, to meet its electricity needs. More than 50% of available generation capacity comes from fossil fuels. Wind and solar only make up around 20% of the total. Today, it seems the grid is highly reliant on fossil fuels. It is unlikely the current mix is sufficient to meet US carbon targets. This snapshot of July 2025 is helpful to understand where the US is today, but it does not provide much information about the historical path to get here or if there is momentum behind any one technology that we would expect to shake up the percentages in the long-run. This requires moving onto more granular analysis.
 
-As an aside, the boxplot helps characterize the differences between legacy power plants and more modern renewables. Nuclear, coal, and natural gas seem to have much higher median capacity sizes relative to solar and wind, which suggests future clean energy needs will require more power plants per MW unless nuclear, which has a better density profile than even coal and natural gas, sees a resurgence.
+The boxplot helps characterize the differences between legacy power plants and more modern renewables. Nuclear, coal, and natural gas seem to have much higher median capacity sizes relative to solar and wind, which suggests future clean energy needs will require more power plants per MW unless nuclear, which has a better density profile than even coal and natural gas, sees a resurgence.
+
+```{python}
+# Set consistent theme for all plots
+sns.set_theme(style="whitegrid", rc={
+    "axes.spines.top": False,
+    "axes.spines.right": False,
+    "grid.alpha": 0.2,
+    "axes.titlepad": 12,
+    "figure.facecolor": "white",
+    "axes.facecolor": "white"
+})
+```
 
 ```{python}
 ### Show annual additions by technology over time
 
 # Order and colors
-order = ["Coal", "Natural Gas", "Nuclear", "Wind", "Solar", "Batteries", "Other"]
+order = ["Coal", "Natural Gas", "Nuclear", "Wind", "Solar", "Battery Storage", "Other"]
 colors = {
     "Coal": "#595959", "Natural Gas": "#1f77b4", "Solar": "#ffcc00",
-    "Wind": "#2ca02c", "Nuclear": "#9467bd", "Batteries": "#ff7f0e",
+    "Wind": "#2ca02c", "Nuclear": "#9467bd", "Battery Storage": "#ff7f0e",
     "Other": "#c7c7c7",
 }
 
@@ -738,28 +783,29 @@ pivot_df = (
 )
 
 # Plot
-ax = pivot_df.plot.area(
-    figsize=(11, 6),
+fig, ax = plt.subplots(figsize=(11, 6))
+pivot_df.plot.area(
+    ax=ax,
     linewidth=0,
     alpha=0.95,
     color=[colors.get(c, "#CBD5E1") for c in pivot_df.columns],
+    legend=False
 )
 
-ax.set(title="Annual Capacity Additions by Technology",
-       xlabel="", ylabel="Added Capacity (GW)")
-ax.legend(title="Technology", loc="upper left", frameon=False)
+ax.set_title("Annual Capacity Additions by Technology", fontsize=14, fontweight='bold')
+ax.set_xlabel("", fontsize=11)
+ax.set_ylabel("Added Capacity (GW)", fontsize=11)
+ax.legend(title="Technology", loc="upper left", frameon=False, fontsize=9)
 ax.margins(x=0)
+
 plt.tight_layout()
 plt.show()
 
 
-
 ### Cumulative Additions
 # --- prep ---
-annual = eia_df
-
 annual = (
-    annual.groupby(["operating_year", "technology"])["capacity_gw"]
+    eia_df.groupby(["operating_year", "technology"])["capacity_gw"]
           .sum().unstack(fill_value=0).sort_index()
 )
 
@@ -767,91 +813,83 @@ cumul = annual.cumsum()
 cumul.index = pd.to_numeric(cumul.index, errors="coerce")
 cumul = cumul.loc[(cumul.index >= 1950) & (cumul.index <= 2025)]
 
-# --- colors ---
-colors = {
-    "Coal":        "#595959",
-    "Natural Gas": "#1f77b4",
-    "Solar":       "#ffcc00",
-    "Wind":        "#2ca02c",
-    "Nuclear":     "#9467bd",
-    "Batteries":   "#ff7f0e",
-    "Other":       "#c7c7c7",
-}
-
 # order by final-year contribution for stack and legend
 order = cumul.iloc[-1].sort_values(ascending=False).index.tolist()
 
 # long-form for seaborn.objects
 plot_df = (
     cumul.reset_index(names="operating_year")
-       [[ "operating_year", *order ]]
+       [["operating_year", *order]]
        .melt(id_vars="operating_year", var_name="technology", value_name="capacity_gw")
 )
 
 # palette aligned to order
 palette = {k: colors.get(k, "#c7c7c7") for k in order}
 
-# theme
-sns.set_theme(style="whitegrid", rc={
-    "axes.spines.top": False,
-    "axes.spines.right": False,
-    "grid.alpha": 0.2,
-    "axes.titlepad": 12,
-})
-
 fmt_gw = FuncFormatter(lambda v, _: f"{v:,.0f}")
 
-# --- plot ---
-p = (
-    so.Plot(plot_df, x="operating_year", y="capacity_gw", color="technology")
-      .add(so.Area(alpha=0.95), so.Stack())
-      .scale(color=palette)
-      .limit(x=(1950, 2025), y=(0, None))
-)
+# --- plot using matplotlib for consistency ---
+fig, ax = plt.subplots(figsize=(11, 6))
 
-fig = p.on(plt.figure(figsize=(11, 6))).plot()
-ax = plt.gca()  # current Axes from the just-plotted figure
+# Create stacked area plot
+for tech in order:
+    tech_data = plot_df[plot_df["technology"] == tech]
+    if tech == order[0]:
+        ax.fill_between(
+            tech_data["operating_year"],
+            0,
+            tech_data["capacity_gw"],
+            color=palette[tech],
+            alpha=0.95,
+            label=tech
+        )
+        prev_values = tech_data.set_index("operating_year")["capacity_gw"]
+    else:
+        tech_data_indexed = tech_data.set_index("operating_year")["capacity_gw"]
+        ax.fill_between(
+            tech_data["operating_year"],
+            prev_values,
+            prev_values + tech_data_indexed,
+            color=palette[tech],
+            alpha=0.95,
+            label=tech
+        )
+        prev_values = prev_values + tech_data_indexed
 
-# legend with ordered labels
-handles, labels = ax.get_legend_handles_labels()
-idx = {lab: i for i, lab in enumerate(order)}
-pairs = sorted(zip(handles, labels), key=lambda hl: idx.get(hl[1], 1_000))
-handles, labels = zip(*pairs) if pairs else (handles, labels)
-
-ax.legend(handles, labels, title="Technology", loc="upper left", ncols=2, frameon=False)
-
-# remove the automatic legend created by seaborn.objects
-ax.get_legend().set_title(None)
-ax.get_legend().remove()
-
-# titles and formatting
-ax.set_title("Cumulative Installed Capacity by Technology")
-ax.set_xlabel("")
-ax.set_ylabel("Installed Capacity (GW)")
+ax.set_title("Cumulative Installed Capacity by Technology", fontsize=14, fontweight='bold')
+ax.set_xlabel("", fontsize=11)
+ax.set_ylabel("Installed Capacity (GW)", fontsize=11)
 ax.yaxis.set_major_formatter(fmt_gw)
+ax.legend(title="Technology", loc="upper left", ncols=2, frameon=False, fontsize=9)
+ax.set_xlim(1950, 2025)
+ax.set_ylim(0, None)
 
 plt.tight_layout()
 plt.show()
-
 ```
 
 #### Annual Capacity and Cumulative Additions
 
-These time series better depicts how the US got to its current fuel mix and better depicts the momentum behind each technology. A few major insights pop out:
+These time series do a better job showing how the US arrived at its current fuel mix and where the momentum behind each technology really sits. A few major insights pop out:
 
-**Coal's Prime Time:** Coal is not a mover of the 21st century. Despite being a significant part of the current US fuel mix, the vast majority of coal seems to have been added between 1965 and 1985. Since roughly 2015, it seems that almost no coal has come online. This suggests that coal is a legacy resource that absent any substantial change in the policy environment, may continue to no longer be added at scale. This could be a sign for a cleaner grid unless its replaced by a different fossil fuel source, such as natural gas.
+**Coal Slowed Way Down**
 
-**Natural Gas - The Apex Predator:** Natural gas is the star of this graph. The shale revolution of the 2000s, where fracking and horizontal drilling burst onto the scene, is a massive spike on the graph that exclipses any other additions. No other energy source at any time period has come close to this amount of year-to-year added capacity. Given the absence of wind, solar, or nuclear showing up in the early 2000s, it seems that natural gas was the main replacement for coal additions in this period. While natural gas is not clean in absolute terms, it is certainly much cleaner than coal, which is a promising sign to some degree. Nothing about this graph seems to indicate natural gas expansion is stopping anytime soon, but its relative share could be cut into, just like it did to coal.
+Coal is not a mover of the 21st century. Even though it remains a meaningful part of today’s fuel mix, most coal capacity was added between roughly 1965 and 1985. Since around 2015, almost no new coal appears to have come online. This suggests coal is now a legacy resource that, absent a major policy shift, is unlikely to be built at scale going forward. That is a positive signal for a cleaner grid, though only if coal is not simply replaced by another fossil fuel like natural gas.
 
-**Wind and Solar - The New Era:** Wind and solar seem to be the new players on the block with substantial additions from the mid 2000s and on, following the natural gas peak. Wind seems to have been the major clean player in the early 2010s with solar breaking out and skyrocketing after it. By the end of this time series, it seems like clean generation is the vast majority of new generation in the past 5 years. However, as the national data indicates, that means clean energy is still playing catchup to a a massive fossil fuel-based market share. The cumulative graph clearly depicts the early-bird advantage from the shale revolution that firmly planted itself as the leader of electricity generation. To better understand if we can expect this trend to continue to give renewables (and clean energy broadly) a chance to replace natural gas, we need more future-looking evidence, such as the MISO data, and we need to see if these trends are replicated across the US or concentrated in certain states. A secondary insight is that the Inflation Reduction Act seems to overlap with some of the solar spike but oddly seems to coincide with a decline in wind relative to solar.
+**Natural Gas Took Over in the 2000s**
 
+Natural gas is the star of this graph. The shale revolution of the 2000s, driven by fracking and horizontal drilling, shows up as a massive spike that eclipses every other period of capacity additions. No other energy source comes close to matching this year-to-year growth. With wind, solar, and nuclear barely registering during this period, natural gas appears to have been the primary replacement for coal. While gas is not clean in absolute terms, it is materially cleaner than coal, making this shift directionally positive. Nothing in this graph suggests gas expansion is stopping anytime soon, though renewables seem to be chipping away at its share of production.
+
+**Wind and Solar Have Driven Recent Growth**
+
+Wind and solar are the new players with meaningful additions starting in the mid-2000s, following the peak in natural gas growth. Wind led clean additions in the early 2010s, with solar breaking out and accelerating rapidly after. By the end of the time series, clean generation makes up the vast majority of new capacity added over the past five years. That said, national data makes clear that clean energy is still playing catch-up to a system built around fossil fuels. The cumulative view highlights the early-mover advantage from the shale era that firmly established natural gas as the dominant generation source. To assess whether renewables can realistically begin to replace gas, we need more forward-looking evidence, such as MISO interconnection queue data, and a clearer sense of whether these trends are national or concentrated in a few states. One secondary signal is that the Inflation Reduction Act appears to overlap with the recent solar surge, while wind additions slow relative to solar over the same period.
 
 The geographic distribution in the EIA and MISO data can be seen below.
+
 ```{python}
 ### Geographic Distribution of Clean vs Non-Clean Capacity
-# 0) Normalize clean to boolean
-map_clean = {True: True, False: False, "Clean": True, "Non-Clean": False}
-eia_df["is_clean"] = eia_df["clean"].map(map_clean)
+# 0)  Convert clean to boolean
+eia_df["is_clean"] = eia_df["clean"] == "Clean"
 
 # 1) Aggregate and get clean/non-clean columns
 agg = (
@@ -950,9 +988,8 @@ fig.show()
 
 active_miso_df = miso_df.query("request_status == 'Active'").copy()
 
-# 0) Normalize clean to boolean
-map_clean = {True: True, False: False, "Clean": True, "Non-Clean": False}
-active_miso_df["is_clean"] = active_miso_df["clean"].map(map_clean)
+# Convert clean to boolean
+active_miso_df["is_clean"] = active_miso_df["clean"] == "Clean"
 
 # 1) Aggregate and get clean/non-clean columns
 agg = (
@@ -1010,7 +1047,7 @@ fig.update_layout(
     title=dict(
         text=(
             "MISO Future Clean Capacity Penetration by State"
-            "<br><sup>Labels show total capacity (GW) actively applied for by developers (GW)</sup>"
+            "<br><sup>Labels show total capacity (GW) actively applied for by developers</sup>"
         ),
         x=0.5
     ),
@@ -1036,14 +1073,13 @@ fig.show()
 
 ```
 
-
 #### Geographic Distribtion
 
 Here we have two distinct maps that show the current fuel mix across the US and the future MISO queue data in terms of a clean, non-clean ratio. This analysis allows us to better understand the nature of where energy is being concentrated.
 
 Notably, the United States clean energy mix is heavily concentrated in the West. The Eastern part of the United States has a very high ratio of non-clean energy resources. This distribution suggests that any future clean energy efforts would necessitate a very strategic implementation to ensure the East follows in the path of the West.
 
-The story is very different when we move to future-looking data with MISO. While just a subset of the United States, the clean percentage is dramatically different for the middle part of the United States. Every single state's future energy resources in the queue is well above the 50% mark for clean energy. Assuming the attrition rate for projects in this queue is the same across technologies, we would expect the tail end of the annual added capacity graph to continue forward into the future. This assumes nothing fundamentally changes about the incentives for clean energy resources, which recent policy developments with the One Big Beautiful Bill suggest is too optimistic. To characterise why this matters, it is valuable to isolate the distribution of these different types of projects that bring extensive capital wherever they are located.
+The story is very different when we move to future-looking data with MISO. While just a subset of the United States, the clean percentage is dramatically different for the middle part of the United States. Every single state's future energy resources in the queue is well above the 50% mark for clean energy. Assuming the attrition rate for projects in this queue is the same across technologies, we would expect the tail end of the annual added capacity graph to continue forward into the future. This assumes nothing fundamentally changes about the incentives for clean energy resources, which recent policy developments with the One Big Beautiful Bill suggest is too optimistic. To characterize why this matters, it is valuable to isolate the distribution of these different types of projects that bring extensive capital wherever they are located.
 
 ```{python}
 ### Determine Distribution of Energy Resources - Q: Is capital investment centralized or distributed? Use counties per MW as a proxy.
@@ -1088,14 +1124,14 @@ distribution
 
 #### Geographic Concentration - Counties
 
-While a simplistic measure, it is valuable to review this data. Here, the study takes the total MW for a technology group and divides it by the number of unique counties. In essence, it asks how distributed are these "clean" megawatts across communities relative to their non-clean counterparts. The data is quite striking in terms of renewables but not nuclear. Wind and solar show less than half the coal, nuclear, and natural gas MW per county value. This information suggests that a world with more wind and solar as a broader share of the energy mix may diversify the economic development gains from capital investment to a greater number of communities. A policy shift away from these energy resources could re-entrench wealth into a smaller set of counties. Further causal analysis is warranted, but this information is interesting.
+While a simplistic measure, seeing how power plant MWs are concentrated geographically provides insight into how different technology pathways may affect local communities. Here, the study takes the total MW for a technology group and divides it by the number of unique counties. In essence, it asks how distributed are these "clean" megawatts across communities relative to their non-clean counterparts. The data is quite striking in terms of renewables but not nuclear. Wind and solar show less than half the coal, nuclear, and natural gas MW per county value. This information suggests that a world with more wind and solar as a broader share of the energy mix may diversify the economic development gains from capital investment to a greater number of communities. Additionally, a renewable-first approach would mean far more communities would have exposure to energy infrastructure. A policy shift away from these energy resources could re-entrench wealth into a smaller set of counties. Further causal analysis is warranted, but this information is interesting.
 
 #### Future of Energy - MISO Interconnection Queue
 
 **How has the IRA and its reduction under the “Big Beautiful Bill” changed the fuel mix of new generation interconnections?**
 
-1. Are clean energy projects entering the queue less after the “Big Beautiful Bill”?
-2. Are clean energy projects withdrawing at a faster rate after the “Big Beautiful Bill”?
+1.  Are clean energy projects entering the queue less after the “Big Beautiful Bill?”
+2.  Are clean energy projects withdrawing at a faster rate after the “Big Beautiful Bill?”
 
 ```{python}
 
@@ -1108,92 +1144,82 @@ clean_new = miso_df.query("clean == 'Clean'")
 withdraw_counts = clean_withdraws["ira_withdraw"].value_counts()
 new_counts = clean_new["ira_new"].value_counts()
 
-# Define how many months are in each period
-
-months_pre = len(pd.date_range(miso_df["withdrawn_date"].min(), "2022-08-15", freq = "MS"))
+# Define how many months are in each period (standardized to new entrant timeline)
+months_pre = len(pd.date_range(miso_df["queue_date"].min(), "2022-08-15", freq="MS"))
 months_during = len(pd.date_range("2022-08-16", "2025-07-03", freq="MS"))
-months_post = len(pd.date_range("2025-07-04", miso_df["withdrawn_date"].max(), freq="MS"))
+months_post = len(pd.date_range("2025-07-04", miso_df["queue_date"].max(), freq="MS"))
 
-
-
-# Given:
-# withdraw_counts (index: "During IRA", "Post-IRA")
-# months_during, months_post
-
+# Create months series
 months = pd.Series(
     {"Pre-IRA": months_pre, "During IRA": months_during, "Post-IRA": months_post},
     name="months"
 )
 
+# Build rates table
 rates = (
     pd.DataFrame({
         "withdrawn": withdraw_counts,
-        "new_clean": new_counts
+        "new_entrants": new_counts
     })
-    .reindex(months.index, fill_value=0)
+    .reindex(["Pre-IRA", "During IRA", "Post-IRA"], fill_value=0)
     .join(months)
     .assign(withdraws_per_month=lambda d: (d["withdrawn"] / d["months"]).round(1))
-    .assign(new_per_month=lambda d: (d["new_clean"] / d["months"]).round(1))
-    .astype({"withdrawn": int, "new_clean": int})
+    .assign(new_per_month=lambda d: (d["new_entrants"] / d["months"]).round(1))
+    .astype({"withdrawn": int, "new_entrants": int})
 )
 
-order = ["Pre-IRA", "During IRA", "Post-IRA"]
-
 rates = (
-    rates.reindex(order)
-    .style.format("{:,.0f}")
+    rates.style
+    .format("{:,.0f}")
     .set_caption("Clean Energy Projects - Withdrawals and New Entrants Per Month")
 )
 
 rates
-
 ```
 
 #### Review of the Future Evidence
 
-The evidence is far from conclusive on whether the Big Beautiful Bill and Inflation Reduction Act's cutbacks have a meaningful impact on clean energy buildout due to data limitations. Unfortunately, given the recent nature of the One Big Beautiful Bill in July and the long timeline of energy projects, it is difficult to parse strong signals from this data.
+Withdrawals have surged sharply. In just a few months post-IRA, withdrawals nearly match prior periods that were 10 to 20 times longer in both count and rate. This points to a major shift in how developers view the viability of existing projects.
 
-The evidence for new entrants is largely inconclusive. It could indicate fewer projects are entering per month than others, but given the actual timing for when projects can apply to MISO (not every month), this study assigns very low informative power to this data at this low a sample size.
+Evidence on new entrants is inconclusive. Fewer projects may be entering each month, but MISO’s application timing, short entrance windows, and new GW caps make this data weak at such a small sample size.
 
-However, the withdrawals_per_month rate and absolute count of withdrawals are very striking. Despite the Post-IRA period only being 3 months long, the Post-IRA period's withdrawals are almost the same amount as the other periods that are 10 and 20 times longer. This effect may not pan out in the long term as meaningful, but it would be difficult to not associate some drastic change in clean energy developers' views of the viability of their projects in this period.
+The impact of the Big Beautiful Bill on the propensity for developers to start new projects is difficult to detect at this stage. Even though the short timeline also affects withdrawal rate calculations, the raw count of withdrawals is strong enough to suggest a real effect.
 
 ## Conclusions & Recommendations
 
 ### Key Findings and Discussion
 
-**1. No Single Technology Is Untouchable**  
-Technological additions fluctuate substantially across sub-periods and appear sensitive to both policy changes and innovation cycles.  For example, the shale revolution caused natural gas to overtake coal's market share, and shortly after, wind and solar began cutting into its share following technological improvements and policy interventions.  It seems prudent to leverage a dual-pronged technology R&D and policy incentive structure to ensure more clean energy buildout.  Thus, targeted policy incentives can meaningfully steer development toward clean energy.
+**1. No Single Technology Is Untouchable**\
+Technological additions fluctuate substantially across sub-periods and appear sensitive to both policy changes and innovation cycles. For example, the shale revolution caused natural gas to overtake coal's market share, and shortly after, wind and solar began cutting into its share following technological improvements and policy interventions. It seems prudent to leverage a dual-pronged technology R&D and policy incentive structure to ensure more clean energy buildout. Thus, targeted policy incentives can meaningfully steer development toward clean energy.
 
-**2. Clean Energy Is Not Distributed Uniformly**  
-The western United States dominates clean-energy buildout.  Future research could better parse out why this is the case, but it is important that every state is willing and able to engage in the green transition.  If there are state holdouts and carbon capture does not take hold, Net Zero seems out of reach.  Accordingly, policymakers should consider regional equity to ensure the economic benefits of the transition are more evenly shared.  This is especially true considering the coal towns of the East are hit the hardest from the transition, which can cause societal incohesion and distrust.  A just and equitable energy transition must include these groups.
+**2. Clean Energy Is Not Distributed Uniformly**\
+The western United States dominates clean-energy buildout. Future research could better parse out why this is the case, but it is important that every state is willing and able to engage in the green transition. If there are state holdouts and carbon capture does not take hold, Net Zero seems out of reach. Accordingly, policymakers should consider regional equity to ensure the economic benefits of the transition are more evenly shared. This is especially true considering the coal towns of the East are hit the hardest from the transition, which can cause societal incohesion and distrust. A just and equitable energy transition must include these groups.
 
-**3. Renewables Are More Geographically Dispersed**  
-Within any given state, renewable technologies tend to span more counties and communities.  If more counties are going to see energy resources, that means their identity may increasingly be tied to renewables.  The more personal attachment there is to an energy resource, the easier it is to create coalitions and advocates for clean energy buildout.  This wider footprint suggests that more Americans can experience local economic benefits—an argument that may strengthen public and political support for renewables.  This provides ample opportunity and risk. Diligent engagement is necessary.
+**3. Renewables Are More Geographically Dispersed**\
+Within any given state, renewable technologies tend to span more counties and communities. If more counties are going to see energy resources, that means their identity may increasingly be tied to renewables. The more personal attachment there is to an energy resource, the easier it is to create coalitions and advocates for clean energy buildout. This wider footprint suggests that more Americans can experience local economic benefits. This may strengthen public and political support for renewables; however negative community experiences may result in the opposite effect. Diligent engagement is necessary.
 
-**4. Policy Matters — Advocate for Non-Obstructive Policy**  
-The *Big Beautiful Bill* and the *Inflation Reduction Act (IRA)* correspond to a marked shift in clean-energy project behavior, including increased withdrawals immediately following the IRA's passage.  
-Policy matters, and market forces, despite making solar and wind very cheap, are not enough.  A hostile environment can cause a chilling effect that crowds out renewables.  As Point 1 indicates, no single technology is dominant.  If a clean energy transition is on the horizon, it will require constant policy pressure, and the evidence underscores that markets alone do not dictate capacity expansion. Policy design remains a decisive factor.
+**4. Policy Matters — Advocate for Non-Obstructive Policy**\
+The *Big Beautiful Bill* and the *Inflation Reduction Act (IRA)* correspond to a marked shift in clean-energy project behavior, including increased withdrawals immediately following the IRA's passage.
 
----
+Policy matters, and market forces, despite making solar and wind very cheap, are not enough. A hostile environment can cause a chilling effect that crowds out renewables. As Point 1 indicates, no single technology is dominant. If a clean energy transition is on the horizon, it will require constant policy pressure, and the evidence underscores that markets alone do not dictate capacity expansion. Policy design remains a decisive factor.
+
+------------------------------------------------------------------------
 
 ### Suggestions
 
-- Protect non-obstructive policy and streamline siting to avoid chilling effects.
-- Use visible, county-level benefits to sustain coalitions for renewable deployment.
-- Track project attrition and queue dynamics closely after major policy changes.
+-   Protect non-obstructive policy and streamline siting to avoid chilling effects.
+-   Use visible, county-level benefits to sustain coalitions for renewable deployment.
+-   Track project attrition and queue dynamics closely after major policy changes.
 
-
----
+------------------------------------------------------------------------
 
 ### Future Work
 
-
-
-There is room for further work on this topic to better understand the future of clean energy.  
+There is room for further work on this topic to better understand the future of clean energy.\
 Possible extensions include:
 
-- Apply **causal inference** to estimate the impact of the *Inflation Reduction Act* and the *Big Beautiful Bill* on megawatt capacity.  
-- Include more **regional transmission operator queues** (e.g., PJM, SPP) to create a more nationally representative sample of future capacity.  
-- **Web scrape** MISO documentation at the project level to impute missing project data.  
-- **Repeat this analysis** one year later. Descriptive power would dramatically increase a year out from the *Big Beautiful Bill*, rather than three months.  
-- Apply **statistical inference tests** (two-proportion *z*-tests and Fisher’s exact tests) to compare withdrawal and new-entry rates across policy periods.
+-   Apply **causal inference** to estimate the impact of the *Inflation Reduction Act* and the *Big Beautiful Bill* on megawatt capacity.\
+-   Include more **regional transmission operator queues** (e.g., PJM, SPP) to create a more nationally representative sample of future capacity.\
+-   **Web scrape** MISO documentation at the project level to impute missing project data.\
+-   **Repeat this analysis** one year later. Descriptive power would dramatically increase a year out from the *Big Beautiful Bill*, rather than three months.\
+-   Apply **statistical inference tests** (two-proportion *z*-tests and Fisher’s exact tests) to compare withdrawal and new-entry rates across policy periods.
